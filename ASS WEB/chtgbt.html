@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Order System</title>
+  <style>
+    #order-summary {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    .card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Food Order System</h1>
+
+  <label for="order-type">Pilih Jenis Pesanan:</label>
+  <select id="order-type">
+    <option value="dine-in">Makan di Tempat</option>
+    <option value="take-out">Bawa Pulang</option>
+    <option value="delivery">Makan di Luar</option>
+  </select>
+
+  <button onclick="addToCart()">Buy</button>
+
+  <div id="order-summary">
+    <h2>Order Summary</h2>
+    <div id="cart"></div>
+    <p>Total Harga: <span id="total-price">0</span></p>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    var cart = [];
+
+    function addToCart() {
+      var orderType = document.getElementById('order-type').value;
+      var foodName = "Nasi Goreng"; // Ganti dengan nama makanan yang sesuai
+      var foodPrice = 20; // Ganti dengan harga makanan yang sesuai
+
+      // Simpan data dalam objek
+      var order = {
+        type: orderType,
+        name: foodName,
+        price: foodPrice
+      };
+
+      // Tambahkan objek ke keranjang
+      cart.push(order);
+
+      // Tampilkan data dalam kartu
+      displayOrder(order);
+    }
+
+    function displayOrder(order) {
+      var cartDiv = document.getElementById('cart');
+
+      var card = document.createElement('div');
+      card.classList.add('card');
+
+      var info = document.createElement('p');
+      info.innerHTML = `Nama: ${order.name}<br>Harga: ${order.price}`;
+
+      var quantityInput = document.createElement('input');
+      quantityInput.type = 'number';
+      quantityInput.value = 1;
+      quantityInput.addEventListener('input', function () {
+        updateTotalPrice();
+      });
+
+      card.appendChild(info);
+      card.appendChild(document.createTextNode('Jumlah: '));
+      card.appendChild(quantityInput);
+
+      cartDiv.appendChild(card);
+
+      updateTotalPrice();
+    }
+
+    function updateTotalPrice() {
+      var totalPrice = 0;
+
+      for (var i = 0; i < cart.length; i++) {
+        var quantity = parseInt(document.querySelectorAll('.card input')[i].value);
+        totalPrice += cart[i].price * quantity;
+      }
+
+      var tax = totalPrice * 0.1;
+      var totalPriceWithTax = totalPrice + tax;
+
+      document.getElementById('total-price').innerText = totalPriceWithTax.toFixed(2);
+    }
+  </script>
+</body>
+</html>
